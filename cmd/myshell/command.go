@@ -12,10 +12,13 @@ type Command struct {
 }
 
 func ParseCommand(line string) *Command {
-	split := strings.SplitN(line, " ", 2)
+	commandName, rest, found := strings.Cut(line, " ")
+	if !found {
+		rest = ""
+	}
 
 	return &Command{
-		CommandName: strings.TrimSpace(split[0]),
-		Rest:        strings.TrimSpace(split[1]),
+		CommandName: strings.TrimSpace(commandName),
+		Rest:        strings.TrimSpace(rest),
 	}
 }
