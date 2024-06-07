@@ -48,7 +48,10 @@ func handleCD(c *myshell.Command, w io.Writer) error {
 		c.Args[0] = home
 	}
 	err := os.Chdir(c.Args[0])
-	return err
+	if err != nil {
+		fmt.Fprintf(w, "cd: %s: No such file or directory\n", c.Args[0])
+	}
+	return nil
 }
 
 func handleExit(c *myshell.Command, w io.Writer) error {
