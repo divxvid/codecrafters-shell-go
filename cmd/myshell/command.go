@@ -6,20 +6,16 @@ import (
 
 type Command struct {
 	CommandName string
+	Rest        string
 	Args        []string
 	KeywordArgs map[string]string
 }
 
 func ParseCommand(line string) *Command {
-	split := strings.Split(line, " ")
-	args := make([]string, 0)
-
-	for _, word := range split[1:] {
-		args = append(args, strings.TrimSpace(word))
-	}
+	split := strings.SplitN(line, " ", 2)
 
 	return &Command{
 		CommandName: strings.TrimSpace(split[0]),
-		Args:        args,
+		Rest:        strings.TrimSpace(split[1]),
 	}
 }

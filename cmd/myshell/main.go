@@ -12,16 +12,20 @@ func main() {
 	// Wait for user input
 	executor := NewExecutor()
 	executor.Register("exit", func(c *Command, w io.Writer) error {
-		if len(c.Args) != 1 {
+		if len(c.Rest) == 0 {
 			return fmt.Errorf("Invalid Count of Args")
 		}
 
-		value, err := strconv.Atoi(c.Args[0])
+		value, err := strconv.Atoi(c.Rest)
 		if err != nil {
 			return err
 		}
 
 		os.Exit(value)
+		return nil
+	})
+	executor.Register("echo", func(c *Command, w io.Writer) error {
+		fmt.Fprintf(w, "%s\n", c.Rest)
 		return nil
 	})
 
