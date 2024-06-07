@@ -1,17 +1,25 @@
 package main
 
-import "strings"
+import (
+	"strings"
+)
 
 type Command struct {
-	commandName string
-	args        []string
-	keywordArgs map[string]string
+	CommandName string
+	Args        []string
+	KeywordArgs map[string]string
 }
 
 func ParseCommand(line string) *Command {
 	split := strings.Split(line, " ")
+	args := make([]string, 0)
+
+	for _, word := range split[1:] {
+		args = append(args, strings.TrimSpace(word))
+	}
 
 	return &Command{
-		commandName: strings.TrimSpace(split[0]),
+		CommandName: strings.TrimSpace(split[0]),
+		Args:        args,
 	}
 }
