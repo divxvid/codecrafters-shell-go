@@ -1,4 +1,4 @@
-package main
+package myshell
 
 import (
 	"strings"

@@ -6,12 +6,15 @@ import (
 	"io"
 	"os"
 	"strconv"
+
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/myshell"
 )
 
 func main() {
 	// Wait for user input
-	executor := NewExecutor()
-	executor.Register("exit", func(c *Command, w io.Writer) error {
+	registry := myshell.NewCommandRegistry()
+	executor := myshell.NewExecutor(registry)
+	registry.Register("exit", func(c *myshell.Command, w io.Writer) error {
 		c.ParseArgs()
 		if len(c.Args) == 0 {
 			return fmt.Errorf("Invalid Count of Args")
@@ -25,11 +28,11 @@ func main() {
 		os.Exit(value)
 		return nil
 	})
-	executor.Register("echo", func(c *Command, w io.Writer) error {
+	registry.Register("echo", func(c *myshell.Command, w io.Writer) error {
 		fmt.Fprintf(w, "%s\n", c.Rest)
 		return nil
 	})
-	executor.Register("type", func(c *Command, w io.Writer) error {
+	registry.Register("type", func(c *myshell.Command, w io.Writer) error {
 		c.ParseArgs()
 		if len(c.Args) != 1 {
 			return fmt.Errorf("Invalid Count of Args")
@@ -37,8 +40,8 @@ func main() {
 
 		cName := c.Args[0]
 
-		switch executor.Type(cName) {
-		case BUILTIN:
+		switch registry.GetCommandType(cName) {
+		case myshell.BUILTIN:
 			fmt.Fprintf(w, "%s is a shell builtin\n", cName)
 		default:
 			fmt.Fprintf(w, "%s not found\n", cName)
@@ -55,7 +58,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		command := ParseCommand(line)
+		command := myshell.ParseCommand(line)
 		executor.Execute(command, os.Stdout)
 	}
 }
