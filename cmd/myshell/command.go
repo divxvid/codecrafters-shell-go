@@ -22,3 +22,10 @@ func ParseCommand(line string) *Command {
 		Rest:        strings.TrimSpace(rest),
 	}
 }
+
+func (c *Command) ParseArgs() {
+	splits := strings.Split(c.Rest, " ")
+	for _, w := range splits {
+		c.Args = append(c.Args, strings.TrimSpace(w))
+	}
+}

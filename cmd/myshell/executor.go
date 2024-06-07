@@ -5,6 +5,13 @@ import (
 	"io"
 )
 
+type CommandType int
+
+const (
+	BUILTIN CommandType = iota
+	NONEXISTENT
+)
+
 type ExecutorFunc func(*Command, io.Writer) error
 
 type Executor struct {
@@ -32,4 +39,12 @@ func (e *Executor) Execute(command *Command, w io.Writer) {
 	if err != nil {
 		fmt.Fprintf(w, "An Error occured: %v\n", err)
 	}
+}
+
+func (e *Executor) Type(commandName string) CommandType {
+	_, found := e.registeredCommands[commandName]
+	if found {
+		return BUILTIN
+	}
+	return NONEXISTENT
 }
