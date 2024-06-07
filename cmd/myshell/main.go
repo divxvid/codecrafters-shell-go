@@ -40,10 +40,11 @@ func main() {
 
 		cName := c.Args[0]
 
-		switch registry.GetCommandType(cName) {
-		case myshell.BUILTIN:
+		if _, found := registry.GetExecutor(cName); found {
 			fmt.Fprintf(w, "%s is a shell builtin\n", cName)
-		default:
+		} else if path, found := registry.GetCommandPath(cName); found {
+			fmt.Fprintf(w, "%s is %s\n", cName, path)
+		} else {
 			fmt.Fprintf(w, "%s not found\n", cName)
 		}
 
