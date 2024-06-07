@@ -6,14 +6,19 @@ import (
 	"strings"
 )
 
+var cr *CommandRegistry
+
 type CommandRegistry struct {
 	registeredCommands map[string]ExecutorFunc
 }
 
-func NewCommandRegistry() *CommandRegistry {
-	return &CommandRegistry{
-		registeredCommands: make(map[string]ExecutorFunc),
+func GetCommandRegistry() *CommandRegistry {
+	if cr == nil {
+		cr = &CommandRegistry{
+			registeredCommands: make(map[string]ExecutorFunc),
+		}
 	}
+	return cr
 }
 
 func (cr *CommandRegistry) Register(commandName string, f ExecutorFunc) {
